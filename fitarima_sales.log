@@ -1,0 +1,41 @@
+/home/avelezd/code/miniconda3/lib/python3.7/site-packages/statsmodels/tsa/base/tsa_model.py:162: ValueWarning: No frequency information was provided, so inferred frequency MS will be used.
+  % freq, ValueWarning)
+/home/avelezd/code/miniconda3/lib/python3.7/site-packages/statsmodels/tsa/base/tsa_model.py:162: ValueWarning: No frequency information was provided, so inferred frequency MS will be used.
+  % freq, ValueWarning)
+                             ARIMA Model Results                              
+==============================================================================
+Dep. Variable:                D.Sales   No. Observations:                   35
+Model:                 ARIMA(5, 1, 0)   Log Likelihood                -196.170
+Method:                       css-mle   S.D. of innovations             64.241
+Date:                Wed, 27 May 2020   AIC                            406.340
+Time:                        00:45:19   BIC                            417.227
+Sample:                    02-01-1901   HQIC                           410.098
+                         - 12-01-1903                                         
+=================================================================================
+                    coef    std err          z      P>|z|      [0.025      0.975]
+---------------------------------------------------------------------------------
+const            12.0649      3.652      3.304      0.001       4.908      19.222
+ar.L1.D.Sales    -1.1082      0.183     -6.063      0.000      -1.466      -0.750
+ar.L2.D.Sales    -0.6203      0.282     -2.203      0.028      -1.172      -0.068
+ar.L3.D.Sales    -0.3606      0.295     -1.222      0.222      -0.939       0.218
+ar.L4.D.Sales    -0.1252      0.280     -0.447      0.655      -0.674       0.424
+ar.L5.D.Sales     0.1289      0.191      0.673      0.501      -0.246       0.504
+                                    Roots                                    
+=============================================================================
+                  Real          Imaginary           Modulus         Frequency
+-----------------------------------------------------------------------------
+AR.1           -1.0617           -0.5064j            1.1763           -0.4292
+AR.2           -1.0617           +0.5064j            1.1763            0.4292
+AR.3            0.0816           -1.3804j            1.3828           -0.2406
+AR.4            0.0816           +1.3804j            1.3828            0.2406
+AR.5            2.9315           -0.0000j            2.9315           -0.0000
+-----------------------------------------------------------------------------
+                0
+count   35.000000
+mean    -5.495233
+std     68.132881
+min   -133.296649
+25%    -42.477907
+50%     -7.186547
+75%     24.748321
+max    133.237945
