@@ -13,6 +13,7 @@ from pandas import DataFrame
 from statsmodels.tsa.arima_model import ARIMA
 from matplotlib import pyplot
 from pandas.plotting import autocorrelation_plot
+from sklearn.metrics import mean_squared_error
 
 def parser(x):
 	return datetime.strptime('190'+x, '%Y-%m')
@@ -35,11 +36,21 @@ def shampoosales_autocorrelation(inpath):
     pyplot.show()
 
 def fitarima_sales(inpath):
+    """
+    We will fit an ARIMA model to the entire Shampoo Sales dataset and review the residual errors.
+    """
     series = read_csv(inpath, header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
 
     # fit model
+    #-----------
+    # we fit an ARIMA(5,1,0) model. 
+    # This sets the lag value to 5 for autoregression, 
+    # uses a difference order of 1 to make the time series stationary, 
+    # and uses a moving average model of 0.
     model = ARIMA(series, order=(5,1,0))
     model_fit = model.fit(disp=0)
+    
+    print('Model fit summary')
     print(model_fit.summary())
     
     # plot residual errors
@@ -48,7 +59,32 @@ def fitarima_sales(inpath):
     pyplot.show()
     residuals.plot(kind='kde')
     pyplot.show()
+    
+    print('Residual errors')
     print(residuals.describe())
+
+def arima4casting_simple(inpath):
+    series = read_csv(inpath, header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
+    X = series.values
+    size = int(len(X) * 0.66)
+    train, test = X[0:size], X[size:len(X)]
+    history = [x for x in train]
+    predictions = list()
+    for t in range(len(test)):
+    	model = ARIMA(history, order=(5,1,0))
+    	model_fit = model.fit(disp=0)
+    	output = model_fit.forecast()
+    	yhat = output[0]
+    	predictions.append(yhat)
+    	obs = test[t]
+    	history.append(obs)
+    	print('predicted=%f, expected=%f' % (yhat, obs))
+    error = mean_squared_error(test, predictions)
+    print('Test MSE: %.3f' % error)
+    # plot
+    pyplot.plot(test)
+    pyplot.plot(predictions, color='red')
+    pyplot.show()
 
 if __name__ == "__main__":
     
@@ -73,5 +109,6 @@ if __name__ == "__main__":
     
     # plot_shampoosales(inpath)
     # shampoosales_autocorrelation(inpath)
-    fitarima_sales(inpath)   
+    # fitarima_sales(inpath)
+    arima4casting_simple(inpath)
 
