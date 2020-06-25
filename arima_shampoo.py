@@ -16,7 +16,7 @@ from pandas.plotting import autocorrelation_plot
 from sklearn.metrics import mean_squared_error
 
 def parser(x):
-	return datetime.strptime('190'+x, '%Y-%m')
+    return datetime.strptime('190'+x, '%Y-%m')
 
 def plot_shampoosales(inpath):
     """
@@ -24,6 +24,7 @@ def plot_shampoosales(inpath):
     """
     series = read_csv(inpath, header=0, parse_dates=[0], index_col=0, squeeze=True, date_parser=parser)
     # print(series.head())
+    breakpoint()
     series.plot()
     pyplot.show()
 
@@ -107,8 +108,8 @@ if __name__ == "__main__":
         print('parameters required. try again.')
         sys.exit()
     
-    # plot_shampoosales(inpath)
+    plot_shampoosales(inpath)
     # shampoosales_autocorrelation(inpath)
     # fitarima_sales(inpath)
-    arima4casting_simple(inpath)
+    # arima4casting_simple(inpath)
 
