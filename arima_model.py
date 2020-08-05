@@ -45,7 +45,8 @@ def _get_tsrows(nublock, h5content, nuchannel, nurows, nucols):
             tsrow[0,nucount_cells] = h5content[0,nublock,rowidx,colidx,nuchannel]
             nucount_cells += 1
             # print('cell number: %s'%nucount_cells)
-
+    
+    # breakpoint()
     # tsrow[rowidx,colidx] = array2print[0, nublock, rowidx, colidx, nuchannel]
     # print('valor fila: ', tsrow)
     # print('extraction ok')
@@ -88,9 +89,19 @@ if __name__ == "__main__":
         # inpath = '../00_datasets/shampoo.csv'
         print('parameters required. try again.')
         sys.exit()
-
+    
     tsdataset = get_tsdatastructure(inpath, int(nuchannel))
-    breakpoint() 
-    cellserie = pandas.Series(tsdataset[1:,200], index=tsdataset[1:,0])
-    plot_timeseries_data(cellserie)
+    # breakpoint() 
+    # numpy.savetxt("map_channel{0}.csv".format(nuchannel), tsdataset,
+    #               delimiter=',')
+    
+    # breakpoint()
+    cellserie = pandas.DataFrame(
+        data=tsdataset[1:,1:] #,
+        # index=tsdataset[1:,0],
+        # columns=['nublock'] + list(range(1, 495*436))
+    )
+
+    cellserie.to_csv('serie_cell200.csv')
+    # plot_timeseries_data(cellserie)
 
