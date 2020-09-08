@@ -10,6 +10,9 @@ import numpy
 import pandas
 import logging
 from matplotlib import pyplot
+from matplotlib.colors import ListedColormap
+
+import math
 
 ## ADF test - Stationary times series
 import statsmodels.api as sm
@@ -103,6 +106,7 @@ def get_cell_series(h5path, nuchannel, nurow, nucol, step):
     
     h5content = _get_h5fcontent(h5path)
 
+    
     # Creates a zeros array
     ts = numpy.zeros(NUBLOCKS, dtype = int)
     
@@ -131,24 +135,42 @@ def get_cell_series(h5path, nuchannel, nurow, nucol, step):
 
         if adf_result[0] < adf_result[4]['5%']:
             print('Rejected H0 - Time Series is Stationary')
-            ## Guardar en carpeta output/series_ch0_20180622/stationary
             tserie.to_csv('output/series_ch0_20180622/stationary/{0}.csv'.format())
         else:
             print('Failed to reject H0 - Time Series is Non-Stationary')
-            ## Guardar en carpeta output/series_ch0_20180622/nonstationary
 
         nurow += step
         nucol += step
+
+def plotsaveframe(frame2plot, custcmap, nuchannel, outpath):
+    '''Plot an image and pops up a window to show it, the image is saved after close de window'''    
+    fig = pyplot.figure(figsize=(NUROWS, NUCOLS))
+    pyplot.imshow(frame2plot, cmap=custcmap)
+    pyplot.axis('off')
+    pyplot.title('Stationarity distribution channel {0}'.format(nuchannel))
+
+    pyplot.show()
+    fig.savefig('%s/samplemap_ch%s.png'%(outpath, nuchannel))
+    pyplot.close(fig)
 
 
 def get_stationarytest_tsclassification(h5path, nuchannel):
     h5content = _get_h5fcontent(h5path)
 
+    h5filename = _get_file_name(h5path)
+    h5filename_root = h5filename.replace('_100m_bins.h5','')
+    outpath = '../datasets/output/'
+
     # Creates a zeros array
     ts = numpy.zeros(NUBLOCKS, dtype = int)
-   
+
+    # Creates an empty frame to classify stationarity
+    framearray = numpy.zeros([NUROWS, NUCOLS], dtype = int)
+
     logger.info('Extracting time series')
     nucount = 0
+    isstationary = 0 # {0:"NA", 1:"stationary", 2:"nonstationary"}
+
     for nurow in range(0, NUROWS):
         for nucol in range(0, NUCOLS):
             for nublk in range(0, NUBLOCKS):
@@ -157,14 +179,32 @@ def get_stationarytest_tsclassification(h5path, nuchannel):
             logger.info('\nts {0}, nurow {1}, nucol {2}'.format(nucount, nurow, nucol))
             tserie = pandas.Series(data=ts)
             adf_result = adfuller(tserie)
-
-            if adf_result[0] < adf_result[4]['5%']:
+            
+            if math.isnan(adf_result[0]):
+                logger.info('nan - valores fijos en cero (0)')
+                isstationary = 0
+                tserie.to_csv('{0}/nan/{1}_ch{2}_{3}.csv'.format(outpath
+                                                                  ,h5filename_root
+                                                                  ,nuchannel
+                                                                  ,nucount
+                                                                 ), header=False)
+            elif adf_result[0] < adf_result[4]['5%']:
                 logger.info('stationary')
-                tserie.to_csv('output/series_ch0_20180622/stationary/{0}.csv'.format(nucount),
-                             header=False)
+                isstationary = 1
+                tserie.to_csv('{0}/stationary/{1}_ch{2}_{3}.csv'.format(outpath
+                                                                     ,h5filename_root
+                                                                     ,nuchannel
+                                                                     ,nucount
+                                                                    ), header=False)
             else:
                 logger.info('non-stationary')
-                tserie.to_csv('output/series_ch0_20180622/nonstationary/{0}.csv'.format(nucount),
-                             header=False)
-
+                isstationary = 2
+                tserie.to_csv('{0}/nonstationary/{1}_ch{2}_{3}.csv'.format(outpath
+                                                                        ,h5filename_root
+                                                                        ,nuchannel
+                                                                        ,nucount
+                                                                       ), header=False)
             nucount+=1
+            framearray[nurow, nucol] = isstationary
+
+    return framearray
