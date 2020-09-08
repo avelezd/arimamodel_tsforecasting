@@ -14,10 +14,7 @@ scripts in python language.
 ## datasets
 Conatains all the datasets used by scripts and notebooks.
 ### input
-Those are some of the .h5 files provided by IARAI, the original data is stored in:
-```
-/home/avelezd/code/02_thesis/01_datasets/01_iarai_berlin
-```
+Those are some of the .h5 files provided by IARAI.
 A capital letter was added at the beggining of the name to identify the city. **B**-Berlin, **M**-Moscow, **I**-Istambul.
 
 
