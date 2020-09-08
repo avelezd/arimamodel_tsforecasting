@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------
-# Script name:  arima_shampoo.py
+# Script name:  01_shampoo_sales_forecasting.py
 # Description:  Group of methods to analyze the time series of shampoo sales.
 # Creation date:26/05/2020
 # Last update:  26/05/2020
@@ -104,7 +104,7 @@ if __name__ == "__main__":
             inpath = arg
 
     if not inpath:
-        # inpath = '../00_datasets/shampoo.csv'
+        # inpath = 'datasets/shampoo.csv'
         print('parameters required. try again.')
         sys.exit()
     
