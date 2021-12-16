@@ -1,0 +1,6 @@
+*/scripts/logs
+__pycache__
+*.swp
+*.swo
+.vscode
+**/.ipynb_checkpoints
